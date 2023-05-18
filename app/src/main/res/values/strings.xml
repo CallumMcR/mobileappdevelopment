@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">CalendarApplication</string>
+    <string name="previous_button_description">previous_button_description</string>
+    <string name="next_button_description">next_button_description</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="dropdown_events">
+        <item>Events</item>
+        <item>Pictures</item>
+    </string-array>
+    <string name="wi_day_sunny">&#xf00d;</string>
+
+
+</resources>
