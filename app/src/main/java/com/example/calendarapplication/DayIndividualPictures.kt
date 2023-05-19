@@ -32,7 +32,6 @@ class DayIndividualPicturesAdapter(
                 // Load the image into the ImageView using the photo data
                 // Assuming you have the actual image data (e.g., URI, file path, etc.) in `photo.pictureData`
                 // Use an appropriate method to load the image into the ImageView (e.g., Glide, Picasso, etc.)
-                // Example using Glide:
                 Glide.with(context)
                         .load(photo.pictureData) // Replace `pictureData` with the appropriate field containing the image data
                         .into(holder.imageView)

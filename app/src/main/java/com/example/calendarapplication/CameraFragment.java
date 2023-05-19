@@ -104,7 +104,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
 
         // Check camera permission
         if (hasCameraPermission()) {
-            // Camera permission is already granted
+            // If camera permission is already granted
             openCamera();
         } else {
             // Request camera permission
@@ -139,7 +139,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                // Return false when the dialog is canceled (user clicked "Cancel")
+                // Return false when the dialog is canceled
                 selectedDateText = ""; // Clear the selected date text
                 // Optionally, you can handle additional actions when the dialog is canceled
             }
@@ -154,7 +154,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
 
     private boolean hasCameraPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Check for camera permission on Android Marshmallow and above
+            // Check for camera permission
             return ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
         }
         // On versions prior to Marshmallow, camera permission is granted at install time
@@ -163,7 +163,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
 
     private void requestCameraPermission() {
         if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-            // Explain why the camera permission is needed (optional)
+            // Explain why the camera permission is needed
             Toast.makeText(requireContext(), "Camera permission is required to capture images", Toast.LENGTH_SHORT).show();
         }
 
@@ -238,7 +238,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
 
     private void showCapturedImage() {
         if (imageData != null) {
-            // Display the captured image
+            // Display the captured image by decoding from byte array
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
             capturedImageView.setImageBitmap(bitmap);
             capturedImageView.setVisibility(View.VISIBLE);
