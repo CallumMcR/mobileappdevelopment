@@ -38,30 +38,15 @@ import java.sql.Blob
 private const val REQUEST_CODE_PERMISSIONS = 10
 private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 private const val ARG_MONTH_NUMERIC = "ARG_MONTH_NUMERIC"
-
-class DayFragment : Fragment(),ChangeYearButtonClickListener {
+private const val ARG_YEAR = "ARG_YEAR"
+class DayFragment : Fragment() {
 
     private var monthNumber = 0
     private var spinnerValue = "Events"
     private lateinit var dbHandler: DBHandler
     private var baseYear : Int = 2023
     private lateinit var dayAdapter: DayAdapter
-
-
-    override fun onChangeYearClick(year: Int) {
-        baseYear = year
-        Log.d("baseyear",baseYear.toString())
-        updateData()
-    }
-
-    private fun setGetYear(): Int {
-
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.activity_main, null)
-        val currentYearView = view.findViewById<TextView>(R.id.calendar_year)
-        val currentYear = currentYearView.text
-        val convertedToString = currentYear.toString()
-        return convertedToString.toInt()
-    }
+    private lateinit var monthView: TextView
 
     private fun showAddEventDialog() {
         val builder = AlertDialog.Builder(requireContext())
@@ -146,14 +131,15 @@ class DayFragment : Fragment(),ChangeYearButtonClickListener {
         return days
     }
 
-    private fun addDatesToList(): ArrayList<String>{
+    private fun addDatesToList(): ArrayList<String> {
         val dates = ArrayList<String>()
-        val myCalendar= Calendar.getInstance()
-        val monthNumberChanged = monthNumber-1
+        val myCalendar = Calendar.getInstance()
+        val monthNumberChanged = monthNumber - 1
         myCalendar.set(Calendar.MONTH, monthNumberChanged)
         myCalendar.set(Calendar.YEAR, baseYear)
         myCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        val year = baseYear.toString()
+        val year = baseYear.toString() // Use the baseYear directly
+
         val daysInMonth = myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)
         for (i in 1..daysInMonth) {
             myCalendar.set(Calendar.DAY_OF_MONTH, i)
@@ -163,6 +149,8 @@ class DayFragment : Fragment(),ChangeYearButtonClickListener {
 
         return dates
     }
+
+
 
     private val listOfDays: ArrayList<String> by lazy {
         addDaysToList()
@@ -180,10 +168,15 @@ class DayFragment : Fragment(),ChangeYearButtonClickListener {
     ): View? {
         arguments?.let {
             monthNumber = it.getInt(ARG_MONTH_NUMERIC)
+            baseYear = it.getInt(ARG_YEAR)
         }
+
 
         val view = inflater.inflate(R.layout.fragment_day, container, false)
         dbHandler = DBHandler(requireContext())
+
+        monthView = view.findViewById(R.id.day_fragment_month_text)
+        monthView.text = DateFormatSymbols().months[monthNumber - 1]
 
         // Initialize dayAdapter before setting it as the adapter for the RecyclerView
         dayAdapter = DayAdapter(listOfDays, listOfDates, dbHandler,requireContext())
@@ -219,12 +212,16 @@ class DayFragment : Fragment(),ChangeYearButtonClickListener {
     }
 
     companion object {
-        fun newInstance(monthNumber: Int) = DayFragment().apply {
+        fun newInstance(monthNumber: Int, year: Int) = DayFragment().apply {
             arguments = Bundle().apply {
                 putInt(ARG_MONTH_NUMERIC, monthNumber)
+                putInt(ARG_YEAR, year)
+                baseYear = year // Assign the year value to baseYear
+                Log.d("year",baseYear.toString())
             }
         }
     }
+
 
 
 }
@@ -257,7 +254,6 @@ class DayAdapter(
         val date = dates[position]
         holder.dayText.text = day
         holder.dateText.text = date
-
 
         if (spinnerValue == "Events") { // Check the spinner value
             // Retrieve the events for the current date
